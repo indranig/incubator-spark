@@ -97,8 +97,20 @@ if [ -e "$FWDIR/conf/java-opts" ] ; then
 fi
 export JAVA_OPTS
 # Attention: when changing the way the JAVA_OPTS are assembled, the change must be reflected in ExecutorRunner.scala!
-
-if [ ! -f "$FWDIR/RELEASE" ]; then
+if [ -f "$FWDIR/RELEASE" ]; then
+  num_jars=$(ls "$FWDIR"/jars  | grep "spark-assembly.*hadoop.*.jar" | wc -l)
+  jars_list=$(ls "$FWDIR"/jars | grep "spark-assembly.*hadoop.*.jar")
+  if [ "$num_jars" -eq "0" ]; then
+    echo "Failed to find the Spark jar distribution at $FWDIR/jars" >&2
+    exit 1
+  fi
+  if [ "$num_jars" -gt "1" ]; then
+    echo "Found multiple Spark assembly jars in $FWDIR/jars" >&2
+    echo "$jars_list"
+    echo "Please remove the ones that do not belong to this distribution."
+    exit 1
+  fi
+else
   # Exit if the user hasn't compiled Spark
   num_jars=$(ls "$FWDIR"/assembly/target/scala-$SCALA_VERSION/ | grep "spark-assembly.*hadoop.*.jar" | wc -l)
   jars_list=$(ls "$FWDIR"/assembly/target/scala-$SCALA_VERSION/ | grep "spark-assembly.*hadoop.*.jar")
