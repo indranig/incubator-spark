@@ -252,8 +252,14 @@ object SparkBuild extends Build {
     name := "spark-core",
     resolvers ++= Seq(
        "JBoss Repository"     at "http://repository.jboss.org/nexus/content/repositories/releases/",
-       "Cloudera Repository"  at "https://repository.cloudera.com/artifactory/cloudera-repos/"
+       "Cloudera Repository"  at "https://repository.cloudera.com/artifactory/cloudera-repos/",
+       "Guavus snapshot"      at "https://repo.guavuslabs.com/nexus/content/repositories/snapshots/",
+       "Guavus releases"      at "https://repo.guavuslabs.com/nexus/content/repositories/releases/",
+       "Guavus thirdparty"    at "https://repo.guavuslabs.com/nexus/content/repositories/thirdparty/"
     ),
+
+    credentials += Credentials(Path.userHome / ".ivy2" / ".credentials_guavuslabs"),
+
 
     libraryDependencies ++= Seq(
         "com.google.guava"         % "guava"            % "14.0.1",
@@ -271,7 +277,7 @@ object SparkBuild extends Build {
         "net.liftweb"             %% "lift-json"        % "2.5.1"  excludeAll(excludeNetty),
         "it.unimi.dsi"             % "fastutil"         % "6.4.4",
         "colt"                     % "colt"             % "1.2.0",
-        "org.apache.mesos"         % "mesos"            % "0.16.0-glabs_hdp2",
+        "org.apache.mesos"         % "mesos"            % "0.16.0-glabs_hdp2-6940a81",
         "net.java.dev.jets3t"      % "jets3t"           % "0.7.1",
         "org.apache.derby"         % "derby"            % "10.4.2.0"                     % "test",
         "org.apache.hadoop"        % hadoopClient       % hadoopVersion excludeAll(excludeJackson, excludeNetty, excludeAsm, excludeCglib),
